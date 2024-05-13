@@ -48,6 +48,7 @@
         <WixVariable Id="WixUIDialogBmp" Value="ui\dlgbmp.jpg" />
         <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="Run Agent configuration interface" />
         <Property Id="GENERATE_DUMP" Value="1" />
+        <Property Id="DEFAULT_GENERATE_DUMP" Value="1" />
         <Property Id="ARPNOMODIFY" Value="yes" />
         <Property Id="ARPNOREPAIR" Value="yes" />
         <Property Id="ApplicationFolderName" Value="ossec-agent" />
@@ -125,7 +126,7 @@
         <!-- Close the Wazuh agent GUI -->
         <CustomAction Id="CloseGUI" BinaryKey="InstallerScripts" VBScriptCall="KillGUITask" Return="check" Execute="deferred" Impersonate="no"/>
 
-        <CustomAction Id="VerifyOrCreateRegistryKey" BinaryKey="InstallerScripts" VBScriptCall="VerifyOrCreateRegistryKey" Return="check" Execute="deferred" Impersonate="yes" />
+        <CustomAction Id="CreateDumpRegistryKey" BinaryKey="InstallerScripts" VBScriptCall="CreateDumpRegistryKey" Return="check" Execute="deferred" Impersonate="yes" />
         <UI>
             <UIRef Id="WixUI_Advanced" />
             <Publish Dialog="InstallDirDlg" Control="Next" Event="NewDialog" Value="CustomCheckDialog" Order="4"><![CDATA[WIXUI_DONTVALIDATEPATH OR WIXUI_INSTALLDIR_VALID="1"]]></Publish>
@@ -184,7 +185,7 @@
 			<Custom Action="SetRemoveAllDataValue" Before="InstallFinalize">(NOT UPGRADINGPRODUCTCODE) AND (REMOVE="ALL")</Custom>
  		    <Custom Action="CustomAction_RemoveAllScript" After="SetRemoveAllDataValue">(NOT UPGRADINGPRODUCTCODE) AND (REMOVE="ALL")</Custom>
 
-            <Custom Action="VerifyOrCreateRegistryKey" Before="InstallFinalize">GENERATE_DUMP = "1"</Custom>
+            <Custom Action="CreateDumpRegistryKey" Before="InstallFinalize">GENERATE_DUMP = "1" AND DEFAULT_GENERATE_DUMP = "1"</Custom>
         </InstallExecuteSequence>
 
         <Directory Id="TARGETDIR" Name="SourceDir">

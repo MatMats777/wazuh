@@ -26,6 +26,8 @@
 #include "shared.h"
 #include "auth.h"
 
+#define CTX_MINIMUM_SECURITY_LEVEL_HPUX 4
+
 /* Global variables */
 BIO *bio_err;
 
@@ -108,6 +110,9 @@ SSL_CTX *get_ssl_context(const char *ciphers, int auto_method)
     }
 
     /* Explicitly set options and cipher list */
+#ifdef HPUX
+    SSL_CTX_set_security_level(ctx, CTX_MINIMUM_SECURITY_LEVEL_HPUX);
+#endif
 
     // If auto_method isn't set, allow TLSv1.2 only
     if (!auto_method) {
